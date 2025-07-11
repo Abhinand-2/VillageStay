@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:gramvista/features/auth/pages/login_page.dart';
 
 class HomePage extends StatelessWidget {
-  // Dummy spotlight data
-  final List<Map<String, String>> spotlightPlaces = [
+  const HomePage({super.key});
+
+  final List<Map<String, String>> spotlightPlaces = const [
     {
       'image': 'Carousel/1.png',
       'title': 'Pottery Village - Rajasthan',
@@ -37,13 +39,14 @@ class HomePage extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 16),
-            // 🌟 Spotlight Carousel
+
+            // 🌟 Carousel
             CarouselSlider(
               options: CarouselOptions(
-                height: 220.0,
+                height: 360.0,
                 autoPlay: true,
                 enlargeCenterPage: true,
-                viewportFraction: 0.85,
+                viewportFraction: 0.7,
               ),
               items: spotlightPlaces.map((place) {
                 return Builder(
@@ -58,16 +61,22 @@ class HomePage extends StatelessWidget {
                         child: Stack(
                           fit: StackFit.expand,
                           children: [
-                            Image.network(
+                            Image.asset(
                               place['image']!,
                               fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) => const Center(
+                                child: Text('Image not found', style: TextStyle(color: Colors.red)),
+                              ),
                             ),
                             Container(
                               alignment: Alignment.bottomLeft,
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
-                                  colors: [Colors.black.withOpacity(0.6), Colors.transparent],
+                                  colors: [
+                                    Colors.black.withOpacity(0.6),
+                                    Colors.transparent
+                                  ],
                                   begin: Alignment.bottomCenter,
                                   end: Alignment.topCenter,
                                 ),
@@ -91,6 +100,29 @@ class HomePage extends StatelessWidget {
                   },
                 );
               }).toList(),
+            ),
+
+            const SizedBox(height: 20),
+
+            // 🔐 Login Button
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green[700],
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginPage()),
+                );
+              },
+              child: const Text(
+                'Login',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
             ),
 
             const SizedBox(height: 32),
