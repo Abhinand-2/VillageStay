@@ -50,13 +50,13 @@ class _LoginPageState extends State<LoginPage> {
 
       switch (role) {
         case 'merchant':
-          targetPage = MerchantDashboardPage();
+          targetPage = MerchantDashboard();
           break;
         case 'ngo':
-          targetPage = NGODashboardPage();
+          targetPage = NGODashboard();
           break;
         case 'admin':
-          targetPage = AdminDashboardPage();
+          targetPage = AdminDashboard();
           break;
         case 'tourist':
         default:
