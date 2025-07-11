@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'app.dart'; // This should contain AppRouter or your root widget
+import 'home-page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +29,7 @@ class GramVistaApp extends StatelessWidget {
         fontFamily: 'Roboto',
         scaffoldBackgroundColor: Colors.grey[100],
       ),
-      home: const AppRouter(), // Will decide screen based on role/user_id
+      home:  HomePage(), // Will decide screen based on role/user_id
     );
   }
 }
