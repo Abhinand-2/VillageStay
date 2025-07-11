@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'dashboard.dart'; // Your app's home page
+
+import 'app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Supabase.initialize(
     url:
-        'https://ablywbfjrcybpskugzyf.supabase.co', // 🔁 Replace with your project URL
+        'https://jpzxizfsbdxxythfylml.supabase.co', // 🔁 Replace with your Supabase project URL
     anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFibHl3YmZqcmN5YnBza3VnenlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMjU5MTEsImV4cCI6MjA2NzgwMTkxMX0.SIS8DpjNVDx3C4gu3XnAXqi5-rJU0dEySWDsX8N5ERg', // 🔁 Replace with your anon key
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpwenhpemZzYmR4eHl0aGZ5bG1sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMTU2MTksImV4cCI6MjA2Nzc5MTYxOX0.Z9b5dOmgBfHQyjXcHgu8vlLKVNTgIijVRVZb1YHfruI', // 🔁 Replace with your public anon key
   );
 
-  runApp(const MainApp());
+  runApp(const MyApp());
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
-
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Dashboard(), // Your main app dashboard
+      home: AppRouter(),
     );
   }
 }
