@@ -1,66 +1,8 @@
-// import 'package:flutter/material.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
-// import '../../home/pages/explore_page.dart';
-
-// class LoginPage extends StatefulWidget {
-//   const LoginPage({super.key});
-
-//   @override
-//   State<LoginPage> createState() => _LoginPageState();
-// }
-
-// class _LoginPageState extends State<LoginPage> {
-//   String role = 'tourist';
-//   final TextEditingController _userIdController = TextEditingController();
-
-//   Future<void> _login() async {
-//     final prefs = await SharedPreferences.getInstance();
-//     await prefs.setString('role', role);
-//     await prefs.setString('user_id', _userIdController.text);
-
-//     // Restart app state
-//     Navigator.pushReplacement(
-//       context,
-//       MaterialPageRoute(builder: (_) => const ExplorePage()),
-//     );
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: const Text('VillageStay Login')),
-//       body: Padding(
-//         padding: const EdgeInsets.all(16.0),
-//         child: Column(
-//           children: [
-//             TextField(
-//               controller: _userIdController,
-//               decoration: const InputDecoration(
-//                 labelText: 'Enter Dummy User ID',
-//               ),
-//             ),
-//             const SizedBox(height: 20),
-//             DropdownButtonFormField<String>(
-//               value: role,
-//               decoration: const InputDecoration(labelText: 'Select Role'),
-//               items: ['tourist', 'merchant', 'admin'].map((r) {
-//                 return DropdownMenuItem(value: r, child: Text(r));
-//               }).toList(),
-//               onChanged: (val) {
-//                 if (val != null) setState(() => role = val);
-//               },
-//             ),
-//             const SizedBox(height: 30),
-//             ElevatedButton(onPressed: _login, child: const Text('Login')),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../home/pages/explore_page.dart';
+import 'register_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -70,18 +12,51 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  String role = 'tourist';
-  final TextEditingController _userIdController = TextEditingController();
+  final supabase = Supabase.instance.client;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _loading = false;
 
   Future<void> _login() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('role', role);
-    await prefs.setString('user_id', _userIdController.text);
+    setState(() => _loading = true);
+    try {
+      final response = await supabase.auth.signInWithPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
 
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => const ExplorePage()),
-    );
+      final user = response.user;
+      if (user == null) throw 'Invalid credentials or email not confirmed.';
+
+      // Fetch user role from 'users' table
+      final data = await supabase
+          .from('users')
+          .select('role')
+          .eq('auth_id', user.id)
+          .single();
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('user_id', user.id);
+      await prefs.setString('role', data['role'] ?? 'tourist');
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const ExplorePage()),
+      );
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Login Error: ${error.toString()}')),
+      );
+    } finally {
+      setState(() => _loading = false);
+    }
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -94,7 +69,6 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Header Image
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: Image.network(
@@ -104,7 +78,6 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               const SizedBox(height: 24),
-
               const Text(
                 'Welcome to VillageStay',
                 style: TextStyle(
@@ -121,10 +94,10 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 32),
 
               TextField(
-                controller: _userIdController,
+                controller: _emailController,
                 decoration: InputDecoration(
-                  labelText: 'Enter User ID',
-                  prefixIcon: const Icon(Icons.person),
+                  labelText: 'Email',
+                  prefixIcon: const Icon(Icons.email),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -134,35 +107,31 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 20),
 
-              DropdownButtonFormField<String>(
-                value: role,
+              TextField(
+                controller: _passwordController,
+                obscureText: true,
                 decoration: InputDecoration(
-                  labelText: 'Select Role',
-                  prefixIcon: const Icon(Icons.people),
+                  labelText: 'Password',
+                  prefixIcon: const Icon(Icons.lock),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                   filled: true,
                   fillColor: Colors.white,
                 ),
-                items: const [
-                  DropdownMenuItem(value: 'tourist', child: Text('Tourist')),
-                  DropdownMenuItem(value: 'merchant', child: Text('Merchant')),
-                  DropdownMenuItem(value: 'admin', child: Text('Admin')),
-                ],
-                onChanged: (val) {
-                  if (val != null) setState(() => role = val);
-                },
               ),
               const SizedBox(height: 30),
 
               ElevatedButton.icon(
-                onPressed: _login,
+                onPressed: _loading ? null : _login,
                 icon: const Icon(Icons.login),
-                label: const Text(
-                  'Login & Explore',
-                  style: TextStyle(fontSize: 16),
-                ),
+                label: _loading
+                    ? const CircularProgressIndicator(
+                        color: Colors.white, strokeWidth: 2)
+                    : const Text(
+                        'Login & Explore',
+                        style: TextStyle(fontSize: 16),
+                      ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF059669),
                   padding: const EdgeInsets.symmetric(vertical: 16),
@@ -171,8 +140,22 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
 
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const RegisterPage()),
+                  );
+                },
+                child: const Text(
+                  "Don't have an account? Register here",
+                  style: TextStyle(fontSize: 16, color: Colors.blue),
+                ),
+              ),
+
+              const SizedBox(height: 24),
               const Center(
                 child: Text(
                   'Powered by Village Communities 🏡',
