@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from app.routes import users
 from app.db import supabase
+from app.routes import submissions  # 👈 Import new route
 
 app = FastAPI()
 
@@ -13,3 +14,5 @@ def read_root():
     }
 
 app.include_router(users.router)
+app.include_router(submissions.router)  # 👈 Add this line
+
