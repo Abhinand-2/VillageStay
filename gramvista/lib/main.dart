@@ -28,7 +28,7 @@ class GramVistaApp extends StatelessWidget {
         fontFamily: 'Roboto',
         scaffoldBackgroundColor: Colors.grey[100],
       ),
-      home: const AppRouter(), // Will decide screen based on role/user_id
+      home: AppRouter(), // Will decide screen based on role/user_id
     );
   }
 }

@@ -9,14 +9,12 @@ class MerchantDashboardPage extends StatelessWidget {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Merchant Dashboard"),
-          backgroundColor: Colors.teal,
+          title: const Text('Merchant Dashboard'),
           bottom: const TabBar(
-            indicatorColor: Colors.white,
             tabs: [
-              Tab(text: "My Listings"),
-              Tab(text: "Add Listing"),
-              Tab(text: "Bookings"),
+              Tab(icon: Icon(Icons.list), text: 'My Listings'),
+              Tab(icon: Icon(Icons.add), text: 'Add Listing'),
+              Tab(icon: Icon(Icons.book_online), text: 'Bookings'),
             ],
           ),
         ),
@@ -28,32 +26,29 @@ class MerchantDashboardPage extends StatelessWidget {
   }
 }
 
-// ✅ MyListingsTab
 class MyListingsTab extends StatelessWidget {
   const MyListingsTab({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // [dummy data and widget code here...]
+    return const Center(child: Text("List of your added experiences"));
   }
 }
 
-// ✅ AddListingTab
 class AddListingTab extends StatelessWidget {
   const AddListingTab({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text('Add Listing Form Coming Soon...'));
+    return const Center(child: Text("Form to add a new listing"));
   }
 }
 
-// ✅ BookingsReceivedTab
 class BookingsReceivedTab extends StatelessWidget {
   const BookingsReceivedTab({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // [dummy data and widget code here...]
+    return const Center(child: Text("All bookings received from tourists"));
   }
 }

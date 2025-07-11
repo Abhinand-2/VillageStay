@@ -1,32 +1,77 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:gramvista/features/booking/pages/booking_page.dart';
 
-class ExplorePage extends StatelessWidget {
-  ExplorePage({super.key});
+class ExplorePage extends StatefulWidget {
+  const ExplorePage({super.key});
+
+  @override
+  State<ExplorePage> createState() => _ExplorePageState();
+}
+
+class _ExplorePageState extends State<ExplorePage> {
+  final List<String> themes = [
+    'All',
+    'Eco-tourism',
+    'Crafts',
+    'Cultural',
+    'Nature',
+    'Food',
+    'Adventure',
+  ];
+  final List<String> locations = [
+    'All',
+    'Wayanad',
+    'Kochi',
+    'Alappuzha',
+    'Kovalam',
+    'Thekkady',
+  ];
+
+  String searchQuery = '';
+  String selectedTheme = 'All';
+  String selectedLocation = 'All';
 
   final List<Map<String, dynamic>> keralaListings = [
     {
       'title': 'Backwater Canoe Ride',
       'location': 'Alappuzha',
+      'theme': 'Nature',
       'latlng': LatLng(9.4981, 76.3388),
     },
     {
       'title': 'Hill Farm Homestay',
       'location': 'Wayanad',
+      'theme': 'Eco-tourism',
       'latlng': LatLng(11.6854, 76.1310),
     },
     {
       'title': 'Beachside Handicrafts',
       'location': 'Kovalam',
+      'theme': 'Crafts',
       'latlng': LatLng(8.4029, 76.9780),
     },
     {
       'title': 'Kathakali Performance',
       'location': 'Kochi',
+      'theme': 'Cultural',
       'latlng': LatLng(9.9312, 76.2673),
     },
   ];
+
+  List<Map<String, dynamic>> get filteredListings {
+    return keralaListings.where((listing) {
+      final matchesSearch =
+          searchQuery.isEmpty ||
+          listing['title'].toLowerCase().contains(searchQuery.toLowerCase());
+      final matchesTheme =
+          selectedTheme == 'All' || listing['theme'] == selectedTheme;
+      final matchesLocation =
+          selectedLocation == 'All' || listing['location'] == selectedLocation;
+      return matchesSearch && matchesTheme && matchesLocation;
+    }).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,26 +82,76 @@ class ExplorePage extends StatelessWidget {
       ),
       body: Column(
         children: [
-          const SizedBox(height: 12),
-          const Text(
-            'Explore Authentic Kerala Experiences',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.teal,
+          const SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: TextField(
+              decoration: const InputDecoration(
+                hintText: 'Search listings...',
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(),
+              ),
+              onChanged: (val) {
+                setState(() => searchQuery = val);
+              },
             ),
           ),
           const SizedBox(height: 10),
-
-          // 🗺️ Map View
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: DropdownButtonFormField<String>(
+                    decoration: const InputDecoration(
+                      labelText: 'Theme',
+                      prefixIcon: Icon(Icons.category),
+                      border: OutlineInputBorder(),
+                    ),
+                    value: selectedTheme,
+                    items: themes
+                        .map(
+                          (theme) => DropdownMenuItem(
+                            value: theme,
+                            child: Text(theme),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (val) =>
+                        setState(() => selectedTheme = val ?? 'All'),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: DropdownButtonFormField<String>(
+                    decoration: const InputDecoration(
+                      labelText: 'Location',
+                      prefixIcon: Icon(Icons.location_on),
+                      border: OutlineInputBorder(),
+                    ),
+                    value: selectedLocation,
+                    items: locations
+                        .map(
+                          (loc) =>
+                              DropdownMenuItem(value: loc, child: Text(loc)),
+                        )
+                        .toList(),
+                    onChanged: (val) =>
+                        setState(() => selectedLocation = val ?? 'All'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 10),
           Expanded(
             flex: 2,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
+              padding: const EdgeInsets.all(8),
               child: FlutterMap(
                 options: MapOptions(
-                  center: LatLng(10.8505, 76.2711), // Center of Kerala
-                  zoom: 7.4,
+                  center: LatLng(10.8505, 76.2711),
+                  zoom: 7.5,
                 ),
                 children: [
                   TileLayer(
@@ -65,17 +160,17 @@ class ExplorePage extends StatelessWidget {
                     subdomains: const ['a', 'b', 'c'],
                   ),
                   MarkerLayer(
-                    markers: keralaListings.map((item) {
+                    markers: filteredListings.map((item) {
                       return Marker(
-                        width: 50.0,
-                        height: 50.0,
+                        width: 80.0,
+                        height: 80.0,
                         point: item['latlng'],
                         child: Tooltip(
-                          message: '${item['title']} — ${item['location']}',
+                          message: item['title'],
                           child: const Icon(
-                            Icons.location_on,
-                            color: Colors.teal,
-                            size: 36,
+                            Icons.location_pin,
+                            color: Colors.red,
+                            size: 30,
                           ),
                         ),
                       );
@@ -85,43 +180,41 @@ class ExplorePage extends StatelessWidget {
               ),
             ),
           ),
-
-          const SizedBox(height: 10),
-
-          // 📋 List of Listings
+          const Divider(height: 0),
           Expanded(
-            flex: 2,
-            child: ListView.builder(
-              itemCount: keralaListings.length,
-              itemBuilder: (context, index) {
-                final item = keralaListings[index];
-                return Card(
-                  elevation: 2,
-                  margin: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
-                  ),
-                  child: ListTile(
-                    leading: const Icon(Icons.place, color: Colors.teal),
-                    title: Text(item['title']),
-                    subtitle: Text(item['location']),
-                    trailing: ElevatedButton(
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Booking for ${item['title']}...'),
+            flex: 3,
+            child: filteredListings.isEmpty
+                ? const Center(child: Text('No listings match your criteria.'))
+                : ListView.builder(
+                    itemCount: filteredListings.length,
+                    itemBuilder: (context, index) {
+                      final item = filteredListings[index];
+                      return ListTile(
+                        leading: const Icon(Icons.place, color: Colors.teal),
+                        title: Text(item['title']),
+                        subtitle: Text(
+                          '${item['location']} • ${item['theme']}',
+                        ),
+                        trailing: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => BookingPage(
+                                  title: item['title'],
+                                  location: item['location'],
+                                ),
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.teal,
                           ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.teal,
-                      ),
-                      child: const Text('Book'),
-                    ),
+                          child: const Text('Book'),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
           ),
         ],
       ),
