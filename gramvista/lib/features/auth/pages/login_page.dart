@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../home/pages/explore_page.dart';
+
+// Dashboard imports (adjust the paths as needed)
+import '../../home/pages/explore_page.dart'; // tourist
+import '../../merchant_dashboard/pages/merchant_dashboard_page.dart'; // merchant
+import '../../ngo_dashboard/pages/ngo_dashboard_page.dart'; // ngo
+import '../../admin_dashboard/pages/admin_dashboard_page.dart'; // admin
 import 'register_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -28,20 +33,39 @@ class _LoginPageState extends State<LoginPage> {
       final user = response.user;
       if (user == null) throw 'Invalid credentials or email not confirmed.';
 
-      // Fetch user role from 'users' table
+      // Fetch user role from Supabase 'users' table
       final data = await supabase
           .from('users')
           .select('role')
           .eq('auth_id', user.id)
           .single();
 
+      String role = data['role'] ?? 'tourist';
+
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('user_id', user.id);
-      await prefs.setString('role', data['role'] ?? 'tourist');
+      await prefs.setString('role', role);
+
+      Widget targetPage;
+
+      switch (role) {
+        case 'merchant':
+          targetPage = MerchantDashboardPage();
+          break;
+        case 'ngo':
+          targetPage = NGODashboardPage();
+          break;
+        case 'admin':
+          targetPage = AdminDashboardPage();
+          break;
+        case 'tourist':
+        default:
+          targetPage = ExplorePage();
+      }
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) =>  ExplorePage()),
+        MaterialPageRoute(builder: (_) => targetPage),
       );
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
