@@ -41,7 +41,7 @@ class _AppRouterState extends State<AppRouter> {
 
     switch (role) {
       case 'tourist':
-        return const ExplorePage();
+        return ExplorePage();
       // case 'merchant':
       //   return const MerchantDashboardPage();
       // case 'admin':

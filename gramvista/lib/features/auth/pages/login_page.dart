@@ -80,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
 
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (_) => const ExplorePage()),
+      MaterialPageRoute(builder: (_) => ExplorePage()),
     );
   }
 
@@ -95,16 +95,15 @@ class _LoginPageState extends State<LoginPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // Header Image
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.network(
-                  'https://source.unsplash.com/800x400/?india,village,travel',
-                  height: 200,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              const SizedBox(height: 24),
-
+              // ClipRRect(
+              //   borderRadius: BorderRadius.circular(12),
+              //   child: Image.network(
+              //     'https://source.unsplash.com/800x400/?india,village,travel',
+              //     height: 200,
+              //     fit: BoxFit.cover,
+              //   ),
+              // ),
+              // const SizedBox(height: 24),
               const Text(
                 'Welcome to VillageStay',
                 style: TextStyle(
