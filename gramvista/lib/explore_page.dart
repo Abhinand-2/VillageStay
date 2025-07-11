@@ -27,7 +27,6 @@ class _ExplorePageState extends State<ExplorePage> {
       'location': 'Wayanad',
       'filters': ['Eco-friendly', 'Authentic'],
       'requiresBooking': true,
-      'image': 'https://source.unsplash.com/400x200/?organic,food',
     },
     {
       'title': 'Traditional Weaving Workshop',
@@ -35,7 +34,6 @@ class _ExplorePageState extends State<ExplorePage> {
       'location': 'Kanchipuram',
       'filters': ['Women-led', 'Authentic'],
       'requiresBooking': false,
-      'image': 'https://source.unsplash.com/400x200/?weaving,textile',
     },
     {
       'title': 'Cultural Village Tour',
@@ -43,7 +41,6 @@ class _ExplorePageState extends State<ExplorePage> {
       'location': 'Nagaland',
       'filters': ['Eco-friendly'],
       'requiresBooking': true,
-      'image': 'https://source.unsplash.com/400x200/?village,tourism',
     },
   ];
 
@@ -122,87 +119,70 @@ class _ExplorePageState extends State<ExplorePage> {
                     itemBuilder: (context, index) {
                       final listing = filteredListings[index];
                       return Card(
-                        elevation: 4,
-                        margin: const EdgeInsets.symmetric(vertical: 10),
+                        elevation: 3,
+                        margin: const EdgeInsets.symmetric(vertical: 8),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ClipRRect(
-                              borderRadius: const BorderRadius.vertical(
-                                top: Radius.circular(12),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                listing['title'],
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                              child: Image.network(
-                                listing['image'],
-                                height: 180,
-                                width: double.infinity,
-                                fit: BoxFit.cover,
+                              const SizedBox(height: 4),
+                              Text(
+                                '${listing['theme']} • ${listing['location']}',
+                                style: TextStyle(color: Colors.grey[700]),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    listing['title'],
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    '${listing['theme']} • ${listing['location']}',
-                                    style: TextStyle(color: Colors.grey[700]),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Wrap(
-                                    spacing: 6,
-                                    children: listing['filters']
-                                        .map<Widget>(
-                                          (tag) => Chip(
-                                            label: Text(tag),
-                                            backgroundColor:
-                                                Colors.teal.shade50,
-                                          ),
-                                        )
-                                        .toList(),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: listing['requiresBooking']
-                                        ? ElevatedButton(
-                                            onPressed: () {
-                                              ScaffoldMessenger.of(
-                                                context,
-                                              ).showSnackBar(
-                                                SnackBar(
-                                                  content: Text(
-                                                    'Booking for ${listing['title']}...',
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: Colors.teal,
+                              const SizedBox(height: 8),
+                              Wrap(
+                                spacing: 6,
+                                children: listing['filters']
+                                    .map<Widget>(
+                                      (tag) => Chip(
+                                        label: Text(tag),
+                                        backgroundColor: Colors.teal.shade50,
+                                      ),
+                                    )
+                                    .toList(),
+                              ),
+                              const SizedBox(height: 10),
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: listing['requiresBooking']
+                                    ? ElevatedButton(
+                                        onPressed: () {
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                'Booking for ${listing['title']}...',
+                                              ),
                                             ),
-                                            child: const Text('Book Now'),
-                                          )
-                                        : const Text(
-                                            'Free Entry',
-                                            style: TextStyle(
-                                              fontStyle: FontStyle.italic,
-                                            ),
-                                          ),
-                                  ),
-                                ],
+                                          );
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.teal,
+                                        ),
+                                        child: const Text('Book Now'),
+                                      )
+                                    : const Text(
+                                        'Free Entry',
+                                        style: TextStyle(
+                                          fontStyle: FontStyle.italic,
+                                        ),
+                                      ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       );
                     },
