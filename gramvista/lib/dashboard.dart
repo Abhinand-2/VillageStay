@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'explore_page.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -56,14 +57,7 @@ class _DashboardState extends State<Dashboard> {
   }
 }
 
-// Placeholder widgets
-class ExplorePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(child: Text('Map & Filters coming soon...'));
-  }
-}
-
+// Keep these temporary placeholders for now
 class TrendingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
