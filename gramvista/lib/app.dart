@@ -247,6 +247,7 @@ import 'features/auth/pages/login_page.dart';
 import 'features/home/pages/explore_page.dart';
 import 'features/merchant_dashboard/pages/merchant_dashboard_page.dart';
 //import 'features/admin/pages/admin_panel.dart';
+import 'features/tourist/pages/tourist_main_page.dart';
 
 class AppRouter extends StatefulWidget {
   const AppRouter({super.key});
@@ -281,7 +282,7 @@ class _AppRouterState extends State<AppRouter> {
 
     switch (role) {
       case 'tourist':
-        return const ExplorePage();
+        return const TouristMainPage(); // instead of ExplorePage or Dashboard directly
       case 'merchant':
         return const MerchantDashboardPage();
       // case 'admin':
