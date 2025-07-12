@@ -12,6 +12,7 @@
         "fl_chart",
         "flutter",
         "flutter_map",
+        "google_generative_ai",
         "latlong2",
         "supabase_flutter"
       ],
@@ -69,6 +70,13 @@
       "version": "0.9.1",
       "dependencies": [
         "intl"
+      ]
+    },
+    {
+      "name": "google_generative_ai",
+      "version": "0.4.7",
+      "dependencies": [
+        "http"
       ]
     },
     {
