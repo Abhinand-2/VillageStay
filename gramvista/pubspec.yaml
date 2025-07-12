@@ -8,6 +8,8 @@ environment:
 
 dependencies:
   carousel_slider: ^5.1.1
+  dropdown_search: ^6.0.2
+  fl_chart: ^1.0.0
   flutter:
     sdk: flutter
   flutter_map: ^6.1.0

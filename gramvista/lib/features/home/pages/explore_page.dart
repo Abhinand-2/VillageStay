@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'trending_page.dart'; // Import the trending page
 
 class ExplorePage extends StatelessWidget {
   ExplorePage({super.key});
@@ -48,14 +49,13 @@ class ExplorePage extends StatelessWidget {
           ),
           const SizedBox(height: 10),
 
-          // 🗺️ Map View
           Expanded(
             flex: 2,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: FlutterMap(
                 options: MapOptions(
-                  center: LatLng(10.8505, 76.2711), // Center of Kerala
+                  center: LatLng(10.8505, 76.2711),
                   zoom: 7.4,
                 ),
                 children: [
@@ -88,7 +88,26 @@ class ExplorePage extends StatelessWidget {
 
           const SizedBox(height: 10),
 
-          // 📋 List of Listings
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                icon: const Icon(Icons.trending_up),
+                label: const Text("View Trending Marketplaces"),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.deepOrange),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const TrendingMarketplacePage()),
+                  );
+                },
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 8),
+
           Expanded(
             flex: 2,
             child: ListView.builder(
@@ -97,10 +116,7 @@ class ExplorePage extends StatelessWidget {
                 final item = keralaListings[index];
                 return Card(
                   elevation: 2,
-                  margin: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
-                  ),
+                  margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   child: ListTile(
                     leading: const Icon(Icons.place, color: Colors.teal),
                     title: Text(item['title']),
@@ -108,14 +124,10 @@ class ExplorePage extends StatelessWidget {
                     trailing: ElevatedButton(
                       onPressed: () {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Booking for ${item['title']}...'),
-                          ),
+                          SnackBar(content: Text('Booking for ${item['title']}...')),
                         );
                       },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.teal,
-                      ),
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.teal),
                       child: const Text('Book'),
                     ),
                   ),
