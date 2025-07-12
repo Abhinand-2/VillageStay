@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:gramvista/booking.dart'; // Ensure this path is correct
 
 class ExplorePage extends StatelessWidget {
   ExplorePage({super.key});
@@ -60,8 +61,7 @@ class ExplorePage extends StatelessWidget {
                 ),
                 children: [
                   TileLayer(
-                    urlTemplate:
-                        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                     subdomains: const ['a', 'b', 'c'],
                   ),
                   MarkerLayer(
@@ -107,9 +107,10 @@ class ExplorePage extends StatelessWidget {
                     subtitle: Text(item['location']),
                     trailing: ElevatedButton(
                       onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Booking for ${item['title']}...'),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const BookNowPage(),
                           ),
                         );
                       },

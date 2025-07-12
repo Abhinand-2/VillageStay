@@ -33,7 +33,6 @@ class _LoginPageState extends State<LoginPage> {
       final user = response.user;
       if (user == null) throw 'Invalid credentials or email not confirmed.';
 
-      // Fetch user role from Supabase 'users' table
       final data = await supabase
           .from('users')
           .select('role')
@@ -47,7 +46,6 @@ class _LoginPageState extends State<LoginPage> {
       await prefs.setString('role', role);
 
       Widget targetPage;
-
       switch (role) {
         case 'merchant':
           targetPage = MerchantDashboard();
@@ -93,15 +91,7 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.network(
-                  'https://source.unsplash.com/800x400/?india,village,travel',
-                  height: 200,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 12),
               const Text(
                 'Welcome to VillageStay',
                 style: TextStyle(
