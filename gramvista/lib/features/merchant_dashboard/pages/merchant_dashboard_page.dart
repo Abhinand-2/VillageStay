@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gramvista/features/merchant_dashboard/pages/merchantbankformpage.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'merchant_register_page.dart';
@@ -113,13 +114,25 @@ class _MerchantDashboardState extends State<MerchantDashboard> {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  Expanded(
-                    child: _infoCard(
-                      'Rating Summary',
-                      'See Below',
-                      Icons.pie_chart,
+                  if (submissions.isNotEmpty)
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          final submissionId = submissions[0]['id'];
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => MerchantBankFormPage(submissionId: submissionId),
+                            ),
+                          );
+                        },
+                        child: _infoCard(
+                          'Bank Details',
+                          'Click to add',
+                          Icons.account_balance,
+                        ),
+                      ),
                     ),
-                  ),
                 ],
               ),
               const SizedBox(height: 24),
@@ -151,7 +164,7 @@ class _MerchantDashboardState extends State<MerchantDashboard> {
               const SizedBox(height: 10),
               ...topReviews.map((r) => Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: Text('\u2022 ${r['comment']}', style: const TextStyle(fontSize: 15)),
+                    child: Text('• ${r['comment']}', style: const TextStyle(fontSize: 15)),
                   )),
               const SizedBox(height: 30),
               const Text(
@@ -174,7 +187,7 @@ class _MerchantDashboardState extends State<MerchantDashboard> {
               const SizedBox(height: 30),
               ElevatedButton.icon(
                 icon: const Icon(Icons.store_mall_directory),
-                label: const Text('Register Marketplace'),
+                label: const Text('Update Marketplace Details'),
                 onPressed: () => Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => const MerchantRegisterPage()),

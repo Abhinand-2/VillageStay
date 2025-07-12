@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/material.dart';
 import 'package:gramvista/features/auth/pages/login_page.dart';
 
 class HomePage extends StatelessWidget {
@@ -25,20 +25,16 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFF9FAFB),
       appBar: AppBar(
-        elevation: 0,
-        title: const Text(
-          'Athithya',
-          style: TextStyle(
-            fontFamily: 'Georgia',
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-            letterSpacing: 1.5,
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.green[800],
-      ),
+  elevation: 0,
+  centerTitle: true,
+  backgroundColor: Colors.green[800],
+  title: Image.asset(
+    'assets/logo/logo.png',
+    height: 220,
+    fit: BoxFit.contain,
+  ),
+),
+
       body: SingleChildScrollView(
         child: Column(
           children: [

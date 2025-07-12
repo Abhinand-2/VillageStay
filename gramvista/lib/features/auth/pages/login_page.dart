@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../admin_dashboard/pages/admin_dashboard_page.dart'; // admin
 // Dashboard imports (adjust the paths as needed)
 import '../../home/pages/explore_page.dart'; // tourist
 import '../../merchant_dashboard/pages/merchant_dashboard_page.dart'; // merchant
 import '../../ngo_dashboard/pages/ngo_dashboard_page.dart'; // ngo
-import '../../admin_dashboard/pages/admin_dashboard_page.dart'; // admin
 import 'register_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -93,14 +93,15 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.network(
-                  'https://source.unsplash.com/800x400/?india,village,travel',
-                  height: 200,
-                  fit: BoxFit.cover,
-                ),
-              ),
+              Center(
+  child: Image.asset(
+    'assets/logo/logo2.png',
+    height: 200,
+    width: 900, 
+    fit: BoxFit.cover,
+  ),
+),
+
               const SizedBox(height: 24),
               const Text(
                 'Welcome to VillageStay',
